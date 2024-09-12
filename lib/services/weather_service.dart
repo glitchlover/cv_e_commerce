@@ -53,5 +53,5 @@ class AppWeatherService {
   }
 
   double _convertToCelcius(double tempFahrenheit) =>
-      (5 / 9 * (tempFahrenheit - 32));
+      tempFahrenheit - 273.15;
 }
