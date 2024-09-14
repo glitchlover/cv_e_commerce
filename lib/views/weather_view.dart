@@ -1,18 +1,14 @@
 import 'dart:developer';
 
+import 'package:cv_e_commerce/constants.dart';
 import 'package:cv_e_commerce/models/weather_model.dart';
 import 'package:cv_e_commerce/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class WeatherView extends StatefulWidget {
-  const WeatherView({super.key});
+class WeatherView extends StatelessWidget {
+  WeatherView({super.key});
 
-  @override
-  State<WeatherView> createState() => _WeatherViewState();
-}
-
-class _WeatherViewState extends State<WeatherView> {
   final weatherService = AppWeatherService();
 
   Future<WeatherModel?> fetchWeather() async {
@@ -26,25 +22,19 @@ class _WeatherViewState extends State<WeatherView> {
   }
 
   String getWeatherAnimation(String? mainCondition) {
-    if (mainCondition == null) return "assets/sunny_weather.json";
-    switch (mainCondition.toLowerCase()) {
-      case "clouds":
-        return "assets/coudy_weather.json";
-      case "rain":
-        return "assets/rainy_weather.josn";
-      case "clear":
-        return "assets/sunny_weather.json";
-      case "thunderstorm":
-        return 'assets/rainy_and_stormy_weather.json';
-      default:
-        return "assets/sunny_weather.json";
+    if (mainCondition == null) {
+      return sunnyLottie;
+    } else if (mainCondition.contains("clouds")) {
+      return cloudyLottie;
+    } else if (mainCondition.contains("rain")) {
+      return rainyLottie;
+    } else if (mainCondition.contains("storm")) {
+      return stromyLottie;
+    } else if (mainCondition.contains("sunny")) {
+      return sunnyLottie;
+    } else {
+      return sunnyLottie;
     }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   @override
@@ -61,7 +51,8 @@ class _WeatherViewState extends State<WeatherView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Lottie.asset(getWeatherAnimation(snapshot.data?.weatherCondition)),
-                  Text(snapshot.data?.weatherCondition ?? "Loading weather condition ..."),
+                  Text(snapshot.data?.weatherCondition ??
+                      "Loading weather condition ..."),
                   Text(snapshot.data?.cityName ?? "Loading city ..."),
                   Text(
                       "${snapshot.data?.temperature.round() ?? "Loading Temparature ..."}°C")
